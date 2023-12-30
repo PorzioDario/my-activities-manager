@@ -1,28 +1,40 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
+type Activity = {
+  name: string
+  dueDate: Date
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const [activities, setActivities] = useState<Activity[]>([])
+
+  const generateRandomActivity = () => {
+    const newAct = {
+      name: 'Activity n.' + (activities.length + 1),
+      dueDate: new Date()
+    }
+    setActivities([...activities, newAct])
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <section>
+      <div className="topBar">
+        <img src={reactLogo} className="logo" alt="Vite logo" />
+        <h1>My Activity Manager</h1>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+      <div className="mainSection">
+        <ul className="actionList">
+          {activities.map(act => <li className="activity">{act.name}</li>)}
+        </ul>
+      </div>
+      <div className="footer">
+        <button className="addNewActivity" onClick={generateRandomActivity}>
+          Add New Activity
         </button>
       </div>
-    </>
+    </section>
   )
 }
 
