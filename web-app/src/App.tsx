@@ -1,40 +1,72 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import styled from 'styled-components'
 
-type Activity = {
-  name: string
-  dueDate: Date
-}
+import reactLogo from './assets/react.svg'
+import type { Activity } from './types'
+import { ActivityList } from './components/ActivityList'
+import { NewActivityForm } from './components/NewActivityForm'
+
+const Section = styled.section`
+  height: 100%;
+  display:flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const TopBar = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+const MainSection = styled.div`
+  flex-grow: 2;
+  overflow-y: scroll;
+`
+const Footer = styled.div`
+  padding: 1em;
+  display: flex;
+  justify-content: right;
+`
+
+const Logo = styled.img`
+  height: 6em;
+  padding: 1.5em;
+  padding-right: 3em;
+  will-change: filter;
+  transition: filter 300ms;
+
+  &:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+`
 
 function App() {
   const [activities, setActivities] = useState<Activity[]>([])
+  const [addNew, setAddNew] = useState<boolean>(false)
 
-  const generateRandomActivity = () => {
-    const newAct = {
-      name: 'Activity n.' + (activities.length + 1),
-      dueDate: new Date()
-    }
+  const submitForm = (newAct: Activity) => {
     setActivities([...activities, newAct])
+    setAddNew(false)
   }
 
   return (
-    <section>
-      <div className="topBar">
-        <img src={reactLogo} className="logo" alt="Vite logo" />
+    <Section>
+      <TopBar>
+        <Logo src={reactLogo} className="logo" alt="Logo" />
         <h1>My Activity Manager</h1>
-      </div>
-      <div className="mainSection">
-        <ul className="actionList">
-          {activities.map(act => <li className="activity">{act.name}</li>)}
-        </ul>
-      </div>
-      <div className="footer">
-        <button className="addNewActivity" onClick={generateRandomActivity}>
-          Add New Activity
+      </TopBar>
+      <MainSection>
+        {addNew ? <NewActivityForm onSavePress={submitForm} /> : <ActivityList activities={activities} />}
+      </MainSection>
+      <Footer>
+        {!addNew &&
+          <button className="addNewActivity" onClick={() => setAddNew(true)}>
+            Add New Activity
         </button>
-      </div>
-    </section>
+        }
+      </Footer>
+    </Section>
   )
 }
 
